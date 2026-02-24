@@ -4,7 +4,10 @@
 #include <time.h>
 #include "driver/elevio.h"
 #include "startup.h"
+<<<<<<< HEAD
 #include "elevator.h"
+=======
+>>>>>>> d499b1971c2259a94cf449628e23040bcdb2f8b5
 
 
 
@@ -17,6 +20,7 @@ int main(){
     elevio_motorDirection(DIRN_UP);
 
     
+<<<<<<< HEAD
     int start_floor = startup();
     struct elevator elevator_in_use;
     elevator_in_use.current_floor = start_floor;
@@ -26,6 +30,12 @@ int main(){
 
 
 
+=======
+    startup();
+    stop();
+
+
+>>>>>>> d499b1971c2259a94cf449628e23040bcdb2f8b5
     while(1){
         int floor = elevio_floorSensor();
 

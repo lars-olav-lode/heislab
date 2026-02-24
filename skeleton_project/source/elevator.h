@@ -12,6 +12,7 @@ struct elevator{
     MotorDirection dirc;
     int door_open;
     int moving;
+<<<<<<< HEAD
     int directions; // -1 for ned, 1 for opp
     int next_stop;  // etasje vi skal til
     int obstruction;
@@ -158,3 +159,9 @@ void orders_clear_all(){   //Denne nullstiller alle bestillingsknapper
     }
 }
 
+=======
+    int obstruction;
+    int stop_button;
+    double door_timer;
+};
+>>>>>>> d499b1971c2259a94cf449628e23040bcdb2f8b5
