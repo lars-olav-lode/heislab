@@ -2,5 +2,5 @@
 #include "elevator.h"
 
 void opendoor();
-int startup();
+void startup();
 void stop();

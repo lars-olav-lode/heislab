@@ -5,6 +5,7 @@
 #include "driver/elevio.h"
 #include "startup.h"
 #include "elevator.h"
+#include "driver/elevio.h"
 
 
 
@@ -17,14 +18,31 @@ int main(){
     elevio_motorDirection(DIRN_UP);
 
     
-
-    int start_floor = startup();
-    struct elevator elevator_in_use;
-    elevator_in_use.current_floor = start_floor;
-    main_func(elevator_in_use);
-    stop();
+    printf("Starting up...\n");
     startup();
-    stop();
+    printf("Startup complete!\n");
+    while(elevio_floorSensor() != 3){
+        elevio_motorDirection(1);
+    }
+    int floor = elevio_floorSensor();
+    printf("Reached floor %d\n", floor);
+    opendoor();
+    orders_clear_all();
+    printf("Cleared all orders\n");
+    while(elevio_floorSensor() != 0){
+        elevio_motorDirection(-1);
+    }
+    floor = elevio_floorSensor();
+    printf("Reached floor %d\n", floor);
+    opendoor();
+    printf("Example program complete! Press stop to exit.\n");
+    // struct elevator elevator_in_use;
+    // elevator_in_use.current_floor = start_floor;
+    // main_func(elevator_in_use);
+    // stop();
+    // startup();
+    // stop();
+    printf("Entering main loop...\n");
     while(1){
         int floor = elevio_floorSensor();
 

@@ -15,8 +15,6 @@ void stop(){
             elevio_motorDirection(0);
             break;
         }
-        else{elevio_motorDirection(1);}
-
     }
 }
 
@@ -28,6 +26,7 @@ void opendoor(){
     elevio_doorOpenLamp(1);
     elevio_motorDirection(0);
     time_t start = time(NULL);
+    printf("Door is open\n");
     while(time(NULL)-start < 3){}
 
     while(elevio_obstruction() == 1){
@@ -35,19 +34,18 @@ void opendoor(){
         elevio_motorDirection(0);
     }
     elevio_doorOpenLamp(0);
-    elevio_motorDirection(0);
 }
 
 
 
-int startup(){
+void startup(){
 
     while(elevio_floorSensor() == -1){
         elevio_motorDirection(-1);
         
     }
-
-    return elevio_floorSensor();
+    elevio_motorDirection(0);
+    opendoor();
 
 }
 
