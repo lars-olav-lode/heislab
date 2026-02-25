@@ -160,55 +160,143 @@ void orders_clear_all(void){
     }
 }
 
-// int main(void){
-//     elevio_init();
-//     orders_init();
+int main_func(void){
+    int floor = -1;
+    MotorDirection dir = DIRN_STOP;
 
-//     startup();
+    while(1){
 
-//     MotorDirection dir = DIRN_STOP;
+        orders_pull_buttons();
+
+        int fs = elevio_floorSensor();
+        if(fs != -1){
+            floor = fs;
+            elevio_floorIndicator(floor);
+
+            // Skal vi stoppe her?
+            if(dir != DIRN_STOP && orders_should_stop(floor, dir)){
+                elevio_motorDirection(DIRN_STOP);
+                opendoor();
+                orders_clear_at_floor(floor, dir);
+
+                // Velg ny retning etter stopp
+                dir = orders_choose_direction(floor, dir);
+            }
+        }
+
+        if(elevio_stopButton()){
+            elevio_motorDirection(DIRN_STOP);
+            orders_clear_all();
+            stop();
+            dir = DIRN_STOP;
+        }
+
+        // Hvis vi står stille -> velg retning
+        if(dir == DIRN_STOP && floor != -1){
+            dir = orders_choose_direction(floor, dir);
+        }
+
+        elevio_motorDirection(dir);
+    }
+}
+
+// int main_func(void){
+//     int floor = -1;                 // start som ukjent
 
 //     while(1){
-//         // L3/L4/L5: oppdater floor-indikator når vi vet etasje
-//         int floor = elevio_floorSensor();
-//         if(floor != -1){
+//         orders_pull_buttons();
+
+//         int fs = elevio_floorSensor();   
+//         if(fs != -1){
+//             floor = fs;
 //             elevio_floorIndicator(floor);
 //         }
 
-//         // STOP har høyeste prioritet
-//         handle_stop_if_pressed();
-
-//         // L1/L2: les knapper (NB: ikke kall denne inne i STOP-loop)
-//         orders_pull_buttons();
-
-//         // Hvis dør er åpen: ikke kjør (S1)
-//         // (Hvis du bruker opendoor_3s_with_obstruction() som blokkerer, trenger du ikke ekstra “door_open”-state her.)
-
-//         // Velg retning
-//         if(dir == DIRN_STOP){
-//             if(floor != -1 && orders_any_here(floor)){
-//                 // Stå stille og server etasjen
-//                 opendoor_3s_with_obstruction();
-//                 orders_clear_at_floor(floor, DIRN_STOP);
-//             } else if(floor != -1) {
-//                 dir = orders_choose_direction(floor, dir);
-//                 elevio_motorDirection(dir);
-//             }
-//         } else {
-//             elevio_motorDirection(dir);
-
-//             // Når vi ankommer definert etasje
-//             if(floor != -1 && orders_should_stop(floor, dir)){
-//                 elevio_motorDirection(DIRN_STOP);
-//                 opendoor_3s_with_obstruction();
-//                 orders_clear_at_floor(floor, dir);
-
-//                 // ny retning etter stopp
-//                 dir = orders_choose_direction(floor, dir);
-//                 elevio_motorDirection(dir);
-//             }
+//         if(elevio_stopButton() == 1){
+//             stop();
+//             startup();
 //         }
 
-//         usleep(10*1000);
+//         // Ikke bruk orders_any_* hvis floor er -1
+//         if(floor != -1 && orders_any_below(floor)){
+//             elevio_motorDirection(DIRN_DOWN);
+//         }
+
+//          if(floor != -1 && orders_any_above(floor)){
+//             elevio_motorDirection(DIRN_UP);
+//         }
+
+//         if(floor != -1 && orders_any_here(floor)){
+//             opendoor();
+//             orders_clear_at_floor(floor, DIRN_STOP);  // se under
+//         }
+//     }
+// }
+
+// int main_func(void){
+//     int floor;
+//     while(1){
+
+//         orders_pull_buttons();
+
+//         if(elevio_floorSensor()!= -1){
+//             elevio_floorIndicator(elevio_floorSensor());
+//             floor = elevio_floorSensor();
+//         }
+        
+//         if (elevio_stopButton() == 1){stop();}
+
+//         if(orders_any_below(floor)){
+//             elevio_motorDirection(-1);
+//         }
+
+//         if(orders_any_here(floor) && elevio_floorSensor()!= -1){
+//             opendoor();
+//             orders_clear_at_floor(0, DIRN_DOWN);
+//         }
+
+    //     int floor = elevio_floorSensor();
+    //     MotorDirection dir = DIRN_STOP;
+    //     if(floor != -1){
+    //         elevio_floorIndicator(floor);
+    //     }
+
+    //     // STOP har høyeste prioritet
+    //     if(elevio_stopButton()==1){
+    //         printf("Stopp er trykket");
+            
+    //     }
+       
+        
+
+    //     // L1/L2: les knapper (NB: ikke kall denne inne i STOP-loop)
+    //     orders_pull_buttons();
+
+    //     // Hvis dør er åpen: ikke kjør (S1)
+    //     // (Hvis du bruker opendoor_3s_with_obstruction() som blokkerer, trenger du ikke ekstra “door_open”-state her.)
+
+    //     // Velg retning
+    //     if(dir == DIRN_STOP){
+    //         if(floor != -1 && orders_any_here(floor)){
+    //             opendoor();
+    //             orders_clear_at_floor(floor, DIRN_STOP);
+    //         } else if(floor != -1) {
+    //             dir = orders_choose_direction(floor, dir);
+    //             elevio_motorDirection(dir);
+    //         }
+    //     } else {
+    //         elevio_motorDirection(dir);
+
+    //         // Når vi ankommer definert etasje
+    //         if(floor != -1 && orders_should_stop(floor, dir)){
+    //             elevio_motorDirection(DIRN_STOP);
+    //             opendoor();
+    //             orders_clear_at_floor(floor, dir);
+
+    //             // ny retning etter stopp
+    //             dir = orders_choose_direction(floor, dir);
+    //             elevio_motorDirection(dir);
+    //         }
+    //     }
 //     }
 // }

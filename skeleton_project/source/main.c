@@ -18,24 +18,9 @@ int main(){
     elevio_motorDirection(DIRN_UP);
 
     
-    printf("Starting up...\n");
+    
     startup();
-    printf("Startup complete!\n");
-    while(elevio_floorSensor() != 3){
-        elevio_motorDirection(1);
-    }
-    int floor = elevio_floorSensor();
-    printf("Reached floor %d\n", floor);
-    opendoor();
-    orders_clear_all();
-    printf("Cleared all orders\n");
-    while(elevio_floorSensor() != 0){
-        elevio_motorDirection(-1);
-    }
-    floor = elevio_floorSensor();
-    printf("Reached floor %d\n", floor);
-    opendoor();
-    printf("Example program complete! Press stop to exit.\n");
+    main_func();
     // struct elevator elevator_in_use;
     // elevator_in_use.current_floor = start_floor;
     // main_func(elevator_in_use);

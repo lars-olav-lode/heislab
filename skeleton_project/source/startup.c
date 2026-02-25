@@ -12,41 +12,57 @@ void stop(){
     orders_clear_all();
     while(1){
         if(elevio_stopButton()==1){
+            elevio_stopLamp(1);
             elevio_motorDirection(0);
-            break;
+            continue;
         }
+        break;
     }
+    elevio_stopLamp(0);
+    
+    
 }
 
 
 
 //Åpner føren i 3 sekunder, hvis det er en obstruksjon holdes den åpen
 
-void opendoor(){
+void opendoor(void){
     elevio_doorOpenLamp(1);
-    elevio_motorDirection(0);
-    time_t start = time(NULL);
-    printf("Door is open\n");
-    while(time(NULL)-start < 3){}
+    elevio_motorDirection(DIRN_STOP);
 
-    while(elevio_obstruction() == 1){
-        elevio_doorOpenLamp(1);
-        elevio_motorDirection(0);
+    time_t last_clear = time(NULL);
+
+    while(1){
+        if(elevio_obstruction()){
+            // Obstruction aktiv -> reset "klar-tid"
+            last_clear = time(NULL);
+        }
+
+        // Har det vært obstruction-fritt i 3 sek?
+        if(time(NULL) - last_clear >= 3){
+            break;
+        }
     }
+
     elevio_doorOpenLamp(0);
 }
-
+    
 
 
 void startup(){
 
+    for(int floor = 0; floor < N_FLOORS;floor++){
+        for(int button = 0; button < N_BUTTONS;button ++){
+            elevio_buttonLamp(floor, button,0);
+        }
+    }
     while(elevio_floorSensor() == -1){
         elevio_motorDirection(-1);
-        
     }
-    elevio_motorDirection(0);
-    opendoor();
 
+    elevio_motorDirection(0);
+    elevio_floorIndicator(elevio_floorSensor());
 }
 
 

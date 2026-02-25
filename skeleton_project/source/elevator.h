@@ -1,6 +1,7 @@
 #pragma once
 #include "driver/elevio.h"
 
+
 // order-arrayet: orders[etasje][knapp] = 0/1
 extern int orders[N_FLOORS][N_BUTTONS];
 
@@ -33,3 +34,7 @@ void orders_clear_at_floor(int floor, MotorDirection dir);
 
 // Hvis stopp trykkes, eller ved en nødsituasjon, kan det være lurt å clear alle ordre
 void orders_clear_all(void);
+
+
+int main_func(void);
+
