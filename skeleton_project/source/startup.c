@@ -34,17 +34,22 @@ void opendoor(void){
     time_t last_clear = time(NULL);
 
     while(1){
-        if(elevio_obstruction()){
-            // Obstruction aktiv -> reset "klar-tid"
+        if(elevio_stopButton() == 1){
+            elevio_stopLamp(1);
+        }
+        if(elevio_stopButton() != 1){
+            elevio_stopLamp(0);
+        }
+        if(elevio_obstruction() || elevio_stopButton() == 1){
+            // Obstruction aktiv, reset klar-tid
             last_clear = time(NULL);
         }
 
-        // Har det vært obstruction-fritt i 3 sek?
+       
         if(time(NULL) - last_clear >= 3){
             break;
         }
     }
-
     elevio_doorOpenLamp(0);
 }
     
@@ -60,7 +65,6 @@ void startup(){
     while(elevio_floorSensor() == -1){
         elevio_motorDirection(-1);
     }
-
     elevio_motorDirection(0);
     elevio_floorIndicator(elevio_floorSensor());
 }

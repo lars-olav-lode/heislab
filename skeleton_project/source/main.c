@@ -21,12 +21,8 @@ int main(){
     
     startup();
     main_func();
-    // struct elevator elevator_in_use;
-    // elevator_in_use.current_floor = start_floor;
-    // main_func(elevator_in_use);
-    // stop();
-    // startup();
-    // stop();
+
+    
     printf("Entering main loop...\n");
     while(1){
         int floor = elevio_floorSensor();

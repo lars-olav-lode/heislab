@@ -32,7 +32,7 @@ int  orders_should_stop(int current_floor, MotorDirection dir);
 // Kalles når dere faktisk stopper og åpner dør
 void orders_clear_at_floor(int floor, MotorDirection dir);
 
-// Hvis stopp trykkes, eller ved en nødsituasjon, kan det være lurt å clear alle ordre
+
 void orders_clear_all(void);
 
 
