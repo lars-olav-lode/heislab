@@ -136,9 +136,9 @@ int main_func(void){
 
         orders_pull_buttons();
 
-        int fs = elevio_floorSensor();
-        if(fs != -1){
-            floor = fs;
+        int floor_sensor = elevio_floorSensor();
+        if(floor_sensor != -1){
+            floor = floor_sensor;
             elevio_floorIndicator(floor);
 
             if(dir != DIRN_STOP && orders_should_stop(floor, dir)){
